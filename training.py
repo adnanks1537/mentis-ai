@@ -1,13 +1,10 @@
-import nltk
-from nltk.stem import WordNetLemmatizer
-lemmatizer = WordNetLemmatizer()
+import random
 import json
 import pickle
 import numpy as np
-from keras.models import Sequential
-from keras.layers import Dense, Activation, Dropout
-from keras.optimizers.legacy import SGD
-import random
+import nltk
+from nltk.stem import WordNetLemmatizer
+import tensorflow as tf  # Import TensorFlow
 
 # Download NLTK resources
 nltk.download('punkt')
@@ -73,21 +70,21 @@ training_bags = np.array(training_bags)
 training_output = np.array(training_output)
 
 # Build a sequential neural network model
-model = Sequential()
-model.add(Dense(128, input_shape=(len(training_bags[0]),), activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(64, activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(len(training_output[0]), activation='softmax'))
+model = tf.keras.Sequential()
+model.add(tf.keras.layers.Dense(128, input_shape=(len(training_bags[0]),), activation='relu'))
+model.add(tf.keras.layers.Dropout(0.5))
+model.add(tf.keras.layers.Dense(64, activation='relu'))
+model.add(tf.keras.layers.Dropout(0.5))
+model.add(tf.keras.layers.Dense(len(training_output[0]), activation='softmax'))
 
 # Compile the model
-sgd = SGD(learning_rate=0.01,decay=1e-6, momentum=0.5, nesterov=True)
-model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
+optimizer = tf.keras.optimizers.SGD(learning_rate=0.01, momentum=0.5, nesterov=True, decay=1e-6)
+model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
 
 # Train the model
 history = model.fit(training_bags, training_output, epochs=200, batch_size=5, verbose=1)
 
-# Save the trained model (without the 'history' argument)
+# Save the trained model
 model.save('chatbot.h5')
 
 print('Training Completed')
