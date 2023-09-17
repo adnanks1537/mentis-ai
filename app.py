@@ -5,7 +5,7 @@ import numpy as np
 import nltk
 from nltk.stem import WordNetLemmatizer
 from tensorflow.keras.models import load_model
-import os  # Add this import for path manipulation
+import os
 
 from flask import Flask, render_template, request, jsonify
 
@@ -64,7 +64,7 @@ def predictClass(sentence):
 def getResponse(intentsList, intentsJson):
     if not intentsList:
         # Handle the case where no intents were predicted (empty list)
-        return "We couldn't find the requetsed iformation. Don't worry we're consatntly improving our web app better to assist you."
+        return "We couldn't find the requested information. Don't worry, we're constantly improving our web app to better assist you."
 
     tag = intentsList[0]['intent']
     listOfIntents = intentsJson['categories']
@@ -89,4 +89,4 @@ def chat():
     return jsonify({'response': bot_response})
 
 if __name__ == '__main__':
-    app.run(port=8000)
+    app.run(host='0.0.0.0', port=8000)
